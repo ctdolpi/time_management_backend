@@ -1,7 +1,14 @@
-import { IUser } from "../../models/User";
+import { IUser } from "../../models/UserModel";
+import { Request } from "express";
 
-declare namespace Express {
-  export interface Request {
-    user?: IUser;
-  }
+// declare global {
+//   namespace Express {
+//     interface Request {
+//       user?: IUser;
+//     }
+//   }
+// }
+
+export interface URequest extends Request {
+  user?: IUser;
 }

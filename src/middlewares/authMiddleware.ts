@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import User from "../models/User";
+import User from "../models/UserModel";
+import { URequest } from "../@types/express";
 
 export const protect = async (
-  req: Request,
+  req: URequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -30,7 +31,7 @@ export const protect = async (
 };
 
 export const authorize = (roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: URequest, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
       return res.status(403).json({ error: "Not authorized for this action" });
     }

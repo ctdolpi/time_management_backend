@@ -1,34 +1,79 @@
-import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/User';
-
-// Generate JWT
-const generateToken = (id: string, role: string) => {
-    return jwt.sign({ id, role }, process.env.JWT_SECRET as string, { expiresIn: '1d' });
-};
-
-// Register User
-export const registerUser = async (req: Request, res: Response) => {
+import { Request, Response } from "express";
+import User, { IUser } from "../models/UserModel"; // Assuming you have a User model
+import { URequest } from "../@types/express";
+class UserController {
+  public async getCurrentUser(req: URequest, res: Response): Promise<Response> {
     try {
-        const { name, email, password, role } = req.body;
-        const user: IUser = await User.create({ name, email, password, role });
-        res.status(201).json({ message: 'User created successfully', user });
+      const currentUser = req.user;
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      return res.status(200).json(currentUser);
     } catch (error) {
-        res.status(400).json({ error: (error as Error).message });
+      return res
+        .status(500)
+        .json({ message: "Error retrieving current user", error });
     }
-};
+  }
 
-// Login User
-export const loginUser = async (req: Request, res: Response) => {
+  public async getAllUsers(req: Request, res: Response): Promise<Response> {
     try {
-        const { email, password } = req.body;
-        const user: IUser | null = await User.findOne({ email });
-        if (!user || !(await user.matchPassword(password))) {
-            throw new Error('Invalid credentials');
-        }
-        const token = generateToken(user._id as string, user.role);
-        res.status(200).json({ token });
+      const users = await User.find();
+      return res.status(200).json(users);
     } catch (error) {
-        res.status(400).json({ error: (error as Error).message });
+      return res.status(500).json({ message: "Error retrieving users", error });
     }
-};
+  }
+
+  public async getUserById(req: Request, res: Response): Promise<Response> {
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(500).json({ message: "Error retrieving user", error });
+    }
+  }
+
+  public async createUser(req: Request, res: Response): Promise<Response> {
+    try {
+      const newUser = new User(req.body);
+      await newUser.save();
+      return res.status(201).json(newUser);
+    } catch (error) {
+      return res.status(500).json({ message: "Error creating user", error });
+    }
+  }
+
+  public async updateUser(req: Request, res: Response): Promise<Response> {
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      return res.status(500).json({ message: "Error updating user", error });
+    }
+  }
+
+  public async deleteUser(req: Request, res: Response): Promise<Response> {
+    try {
+      const deletedUser = await User.findByIdAndDelete(req.params.id);
+      if (!deletedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      return res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+      return res.status(500).json({ message: "Error deleting user", error });
+    }
+  }
+}
+
+export default new UserController();
