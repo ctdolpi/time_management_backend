@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import routes from "./routes";
 import bodyParser from "body-parser";
+import { errorHandler } from "./middlewares/error.middleware";
 // import connectDB from "./middlewares/db";
 
 dotenv.config();
@@ -40,10 +41,7 @@ mongoose
 app.use("/api", routes);
 
 // Error handler
-app.use((err: any, req: Request, res: Response, next: Function) => {
-  console.error(err.stack);
-  res.status(500).send("Internal Server Error!");
-});
+app.use(errorHandler);
 
 // Start server
 app.listen(port, () => {

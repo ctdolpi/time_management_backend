@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import User from "../models/User.model";
-import { URequest } from "../@types/express";
+import { CustomError, URequest } from "../@types";
 
 export const protect = async (
   req: URequest,
@@ -23,17 +23,18 @@ export const protect = async (
       req.user = await User.findById(decoded.id).select("-password");
       next();
     } catch (error) {
-      res.status(401).json({ error: "Not authorized, token failed" });
+      next(error);
+      // res.status(401).json({ error: "Not authorized, token failed" });
     }
   } else {
-    res.status(401).json({ error: "Not authorized, no token" });
+    return next(new CustomError("Not authorized, no token", 401));
   }
 };
 
 export const authorize = (roles: string[]) => {
   return (req: URequest, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ error: "Not authorized for this action" });
+      return next(new CustomError("Not authorized", 403));
     }
     next();
   };
