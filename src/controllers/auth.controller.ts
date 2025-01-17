@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User, { IUser } from "../models/UserModel";
+import User, { IUser } from "../models/User.model";
 
 class AuthController {
   constructor() {

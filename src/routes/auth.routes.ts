@@ -1,10 +1,10 @@
 import express from "express";
-import authController from "../controllers/authController";
+import authController from "../controllers/auth.controller";
 import {
   loginValidation,
   registerValidation,
 } from "../validators/userValidator";
-import { validateRequest } from "../middlewares/validateRequest";
+import { validateRequest } from "../middlewares/validateRequest.middleware";
 
 const router = express.Router();
 

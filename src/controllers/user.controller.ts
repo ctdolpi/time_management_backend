@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User, { IUser } from "../models/UserModel"; // Assuming you have a User model
+import User, { IUser } from "../models/User.model"; // Assuming you have a User model
 import { URequest } from "../@types/express";
 class UserController {
   public async getCurrentUser(req: URequest, res: Response): Promise<Response> {
