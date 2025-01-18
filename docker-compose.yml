@@ -1,0 +1,26 @@
+services:
+  app:
+    image: time_management_test_project_backend_image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "41280:41280"
+    environment:
+      - ENV_VAR=your_value
+    volumes:
+      - .:/src
+
+#   db:
+#     image: mongo:latest
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: upward904
+#       MONGO_INITDB_ROOT_PASSWORD: qwe123QWE!@#
+#       MONGO_INITDB_DATABASE: test
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - db_data:/data/db
+
+# volumes:
+#   db_data:

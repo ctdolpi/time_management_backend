@@ -1,6 +1,6 @@
 import { check } from "express-validator";
 
-export const registerValidation = [
+export const signupValidation = [
   check("name")
     .notEmpty()
     .withMessage("Name is required")
@@ -13,7 +13,7 @@ export const registerValidation = [
   // check("role").isIn(["user", "manager", "admin"]).withMessage("Invalid role"),
 ];
 
-export const loginValidation = [
+export const signinValidation = [
   check("email").isEmail().withMessage("Invalid email address"),
   check("password").notEmpty().withMessage("Password is required"),
 ];

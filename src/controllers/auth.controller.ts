@@ -5,8 +5,8 @@ import { CustomError } from "../@types";
 
 class AuthController {
   constructor() {
-    this.registerUser = this.registerUser.bind(this);
-    this.loginUser = this.loginUser.bind(this);
+    this.signupUser = this.signupUser.bind(this);
+    this.signinUser = this.signinUser.bind(this);
   }
 
   private generateToken(id: string, role: string) {
@@ -15,7 +15,7 @@ class AuthController {
     });
   }
 
-  async registerUser(req: Request, res: Response, next: NextFunction) {
+  async signupUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, email, password, role } = req.body;
       const user: IUser = await User.create({ name, email, password, role });
@@ -26,7 +26,7 @@ class AuthController {
     }
   }
 
-  async loginUser(req: Request, res: Response, next: NextFunction) {
+  async signinUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
       const user: IUser | null = await User.findOne({ email });

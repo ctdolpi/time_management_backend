@@ -1,8 +1,8 @@
 # Use the official Node.js image from the Docker Hub
-FROM node:16
+FROM node:22
 
 # Create and change to the app directory
-WORKDIR /app
+WORKDIR /src
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 41280
 
 # Define the command to run the app
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
